@@ -1,0 +1,29 @@
+{
+  "name": "psv",
+  "version": "1.0.0",
+  "description": "porco schema validate",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --recursive -t 5000 -s 1000 './test/*.test.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhangporco/psv.git"
+  },
+  "keywords": [
+    "js",
+    "data",
+    "schema",
+    "validate"
+  ],
+  "author": "Porco",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhangporco/psv/issues"
+  },
+  "homepage": "https://github.com/zhangporco/psv#readme",
+  "dependencies": {
+    "chai": "^4.1.0",
+    "mocha": "^3.4.2"
+  }
+}
