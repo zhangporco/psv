@@ -1,15 +1,16 @@
 # Porco Schema Validate (psv)
-**psv** 是一款轻量级 **js** 数据格式验证工具，相比于其他功能齐备的验证工具，**psv** 的优势在于体积非常小（之所以要写它，就是因为对其他 **validate** 框架不满意，我只是想要一个 **json** 验证，却给我一个 1M 的项目），最开始的核心代码只有 130 行。因此 **psv** 非常适合做个人 **demo** 以及教学。
+**psv** 是一款轻量级 **js** 数据格式验证工具，相比于其他功能齐备的验证工具，**psv** 的优势在于体积非常小（之所以要写它，就是因为对其他 **validate** 框架不满意，我只是想要一个 **json** 验证，却给我一个 1M 的项目），最开始的核心代码只有 130 行。因此 **psv** 非常适合做小型项目、原型试错、个人 **demo** 以及教学。
 
 ## 下载、安装
-```
+
+```javascript
 npm install psv --save
 ```
 
 ## 使用
 首先你需要定义出自己的 schema，比如我：
 
-```
+```javascript
 var schema = {
     key1: {
         type: String,
@@ -23,7 +24,7 @@ var schema = {
 ```
 这个 **schema** 的意思是，两个字段（key1，key2），都是必填，**string** 类型。那么我传入待验证的 **data** 结构是：
 
-```
+```javascript
 var data = {
     key1: 'psv',
     key2: 'psv',
@@ -31,14 +32,14 @@ var data = {
 ```
 接着我们导入并创建 **Psv** 对象进行验证
 
-```
+```javascript
 import Psv from 'psv';
 function pestPsv(schema, data) {
-    const psv = new Psv(schema, data);
-    const validate = psv.validate();
-    if (!validate) {
-        psv.printErrors();
-    }
+	const psv = new Psv(schema, data);
+	const validate = psv.validate();
+	if (!validate) {
+		psv.printErrors();
+	}
 }
 ```
 上面的代码首先创建 **Psv** 对象，并通过构造函数传入 **schema** 和 **data**。接着调用 **validate** 函数，该函数返回值为 **true or false**，
@@ -49,7 +50,7 @@ function pestPsv(schema, data) {
 
 ### String
 
-```
+```javascript
 str: {
     type: String,
     max: 5,
@@ -68,7 +69,7 @@ required ： 是否必须 （布尔）
 
 ### Number
 
-```
+```javascript
 num: {
     type: Number,
     max: 5,
@@ -85,7 +86,7 @@ required ： 是否必须 （布尔）
 
 ### Array
 
-```
+```javascript
 array: {
     type: Array,
     max: 5,
@@ -102,11 +103,11 @@ required ： 是否必须 （布尔）
 
 ### Object
 
-```
+```javascript
 object: {
     type: Object,
     required: true
-},
+}
 ```
 
 required ： 是否必须 （布尔）
@@ -115,7 +116,7 @@ required ： 是否必须 （布尔）
 
 同样，**psv** 支持嵌套定义
 
-```
+```javascript
 const schema2 = {
     str2: {
         type: String,
