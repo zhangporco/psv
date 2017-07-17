@@ -34,7 +34,7 @@ var data = {
 
 ```javascript
 import Psv from 'psv';
-function pestPsv(schema, data) {
+function testPsv(schema, data) {
 	const psv = new Psv(schema, data);
 	const validate = psv.validate();
 	if (!validate) {
@@ -48,7 +48,7 @@ function pestPsv(schema, data) {
 ## api
 目前支持四种数据类型的定义：**String, Number, Array, Object**。
 
-### String
+### 1.String
 
 ```javascript
 str: {
@@ -67,7 +67,7 @@ pattern ： 自定义正则表达式 （正则表达式）
 
 required ： 是否必须 （布尔）
 
-### Number
+### 2.Number
 
 ```javascript
 num: {
@@ -84,7 +84,7 @@ min ： 最小值 （数字）
 
 required ： 是否必须 （布尔）
 
-### Array
+### 3.Array
 
 ```javascript
 array: {
@@ -101,13 +101,13 @@ min ： 最小长度 （数字）
 
 required ： 是否必须 （布尔）
 
-### Object
+### 4.Object
 
 ```javascript
 object: {
     type: Object,
     required: true
-}
+},
 ```
 
 required ： 是否必须 （布尔）
