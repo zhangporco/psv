@@ -39,7 +39,6 @@ Psv.prototype.checkParam = function(schema, data, dKeys) {
             if (schema[dKeys] instanceof Object && data[dKeys]) {
                 this.forParams(schema[dKeys].type, data[dKeys]);
             }
-            break;
     }
 }
 
