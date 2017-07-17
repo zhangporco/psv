@@ -34,11 +34,11 @@ var data = {
 ```
 import Psv from 'psv';
 function pestPsv(schema, data) {
-	    const psv = new Psv(schema, data);
-	    const validate = psv.validate();
-	    if (!validate) {
-		        psv.printErrors();
-	    }
+    const psv = new Psv(schema, data);
+    const validate = psv.validate();
+    if (!validate) {
+        psv.printErrors();
+    }
 }
 ```
 上面的代码首先创建 **Psv** 对象，并通过构造函数传入 **schema** 和 **data**。接着调用 **validate** 函数，该函数返回值为 **true or false**，
