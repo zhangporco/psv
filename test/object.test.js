@@ -1,4 +1,4 @@
-var expect = require('chai').expect;
+var assert = require('assert');
 var Psv = require('../index.js');
 
 describe('psv object 验证', function() {
@@ -14,7 +14,7 @@ describe('psv object 验证', function() {
         }
         const psv = new Psv(schema, data);
         const validate = psv.validate();
-        expect(validate).to.be.ok;
+        assert.ok(validate);
     });
 
     it('正确验证', function() {
@@ -29,7 +29,7 @@ describe('psv object 验证', function() {
         }
         const psv = new Psv(schema, data);
         const validate = psv.validate();
-        expect(validate).to.be.ok;
+        assert.ok(validate);
     });
 
 
@@ -54,6 +54,6 @@ describe('psv object 验证', function() {
         }
         const psv = new Psv(schema, data);
         const validate = psv.validate();
-        expect(validate).to.be.ok;
+        assert.ok(validate);
     });
 });

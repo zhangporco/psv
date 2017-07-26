@@ -23,7 +23,6 @@
   },
   "homepage": "https://github.com/zhangporco/psv#readme",
   "dependencies": {
-    "chai": "^4.1.0",
     "mocha": "^3.4.2"
   }
 }

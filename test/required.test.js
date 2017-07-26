@@ -1,4 +1,4 @@
-var expect = require('chai').expect;
+var assert = require('assert');
 var Psv = require('../index.js');
 
 describe('psv required 验证', function() {
@@ -19,7 +19,7 @@ describe('psv required 验证', function() {
         }
         var psv = new Psv(schema, data);
         var validate = psv.validate();
-        expect(validate).to.be.ok;
+        assert.ok(validate);
     });
 
     it('错误验证', function() {
@@ -37,7 +37,7 @@ describe('psv required 验证', function() {
         var psv = new Psv(schema, data);
         var validate = psv.validate();
         // psv.printErrors();
-        expect(validate).to.not.be.ok;
+        assert.ok(!validate);
     });
 
     it('正确验证.非必填', function() {
@@ -52,7 +52,7 @@ describe('psv required 验证', function() {
         var data = {}
         var psv = new Psv(schema, data);
         var validate = psv.validate();
-        expect(validate).to.be.ok;
+        assert.ok(validate);
     });
 
     it('正确验证.嵌套', function() {
@@ -75,7 +75,7 @@ describe('psv required 验证', function() {
         }
         var psv = new Psv(schema, data);
         var validate = psv.validate();
-        expect(validate).to.be.ok;
+        assert.ok(validate);
     });
 
     it('错误验证.嵌套', function() {
@@ -96,6 +96,6 @@ describe('psv required 验证', function() {
         }
         var psv = new Psv(schema, data);
         var validate = psv.validate();
-        expect(validate).to.not.be.ok;
+        assert.ok(!validate);
     });
 });
