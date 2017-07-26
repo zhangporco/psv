@@ -16,7 +16,7 @@ Psv.prototype.validate = function() {
     this.forParams(this.schema, this.data);
     if (this.errors && this.errors.length) return false;
     return true;
-}
+};
 
 Psv.prototype.forParams = function(schema, data) {
     var dataKeys = Object.keys(data);
@@ -24,7 +24,7 @@ Psv.prototype.forParams = function(schema, data) {
     for (var i = 0; i < dataKeys.length; i++) {
         this.checkParam(schema, data, dataKeys[i]);
     }
-}
+};
 
 Psv.prototype.checkParam = function(schema, data, dKeys) {
     switch (schema[dKeys] && schema[dKeys].type) {
@@ -45,7 +45,7 @@ Psv.prototype.checkParam = function(schema, data, dKeys) {
                 this.forParams(schema[dKeys].type, data[dKeys]);
             }
     }
-}
+};
 
 Psv.prototype.checkError = function(result) {
     if (!result.status) {
@@ -54,17 +54,17 @@ Psv.prototype.checkError = function(result) {
         }
     }
     return result.status;
-}
+};
 
 Psv.prototype.getErrors = function() {
     return this.errors;
-}
+};
 
 Psv.prototype.printErrors = function() {
     for (var i = 0; i < this.errors.length; i++) {
         console.error('\x1b[31m', this.errors[i]);
     }
-}
+};
 
 function required(schema, data) {
     var schemaKeys = Object.keys(schema);
