@@ -37,6 +37,9 @@ Psv.prototype.checkParam = function(schema, data, dKeys) {
         case Array:
             this.checkError(array(schema, data, dKeys));
             break;
+        case Boolean:
+            this.checkError(boolean(data, dKeys));
+            break;
         default:
             if (schema[dKeys] instanceof Object && data[dKeys]) {
                 this.forParams(schema[dKeys].type, data[dKeys]);
@@ -129,6 +132,14 @@ function array (schema, data, dKeys) {
     var min = schema[dKeys].min;
     if (min !== undefined && min > 0 && data[dKeys].length < min) {
         return { status: false, text: printText('字段 ' + dKeys + ' 长度小于最小长度 ' + min) };
+    }
+    return { status: true, text: '' };
+}
+
+function boolean(data, dKeys) {
+    var passes = typeof data[dKeys] === 'boolean';
+    if (!passes) {
+        return { status: false, text: printText('字段 ' + dKeys + ' 不是 Boolean') };
     }
     return { status: true, text: '' };
 }
