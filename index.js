@@ -1,5 +1,7 @@
+'use strict';
+
 /**
- * porco validate
+ * porco schema validate
  * Created by porco on 14/07/2017.
  */
 module.exports = Psv;

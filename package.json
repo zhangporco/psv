@@ -4,7 +4,8 @@
   "description": "porco schema validate",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --recursive -t 5000 -s 1000 './test/*.test.js'"
+    "test": "mocha --recursive -t 5000 -s 1000 './test/*.test.js'",
+    "test-ava": "ava -v ./test/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,6 @@
   },
   "homepage": "https://github.com/zhangporco/psv#readme",
   "dependencies": {
-    "mocha": "^3.4.2"
+    "ava": "^0.21.0"
   }
 }
