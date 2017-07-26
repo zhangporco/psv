@@ -46,7 +46,7 @@ function testPsv(schema, data) {
 如果为 **true** 代表 **data** 符合 **schema** 定义，为 **false** 的话，可以通过 **psv.printErrors()** 或者 **psv.getErrors()** 来获取错误信息。
 
 ## api
-目前支持四种数据类型的定义：**String, Number, Array, Object**。
+目前支持四种数据类型的定义：**String, Number, Array, Boolean, Object**。
 
 ### 1.String
 
@@ -101,7 +101,18 @@ min ： 最小长度 （数字）
 
 required ： 是否必须 （布尔）
 
-### 4.Object
+### 4.Boolean
+
+```javascript
+boo: {
+    type: Boolean,
+    required: true
+},
+```
+
+required ： 是否必须 （布尔）
+
+### 5.Object
 
 ```javascript
 object: {
