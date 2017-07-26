@@ -41,6 +41,21 @@ test('required 错误验证', function(t) {
     t.false(validate)
 });
 
+test('required 错误验证', function(t) {
+    var schema = {
+        key1: {
+            type: String,
+            required: true
+        }
+    };
+    var data = {
+        key1: null
+    };
+    var psv = new Psv(schema, data);
+    var validate = psv.validate();
+    t.false(validate)
+});
+
 test('required 正确验证.非必填', function(t) {
     var schema = {
         key1: {

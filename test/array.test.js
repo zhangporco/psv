@@ -37,6 +37,23 @@ test('array 错误验证', function(t) {
     t.false(validate);
 });
 
+test('array 错误验证', function(t) {
+    const schema = {
+        key1: {
+            type: Array,
+            max: 5,
+            min: 3,
+            required: true
+        }
+    };
+    const data = {
+        key1: [1, 2, 3, 4, 5, 6]
+    };
+    const psv = new Psv(schema, data);
+    const validate = psv.validate();
+    t.false(validate);
+});
+
 test('array 正确验证.嵌套', function(t) {
     const schema2 = {
         key3: {

@@ -20,7 +20,22 @@ test('number 正确验证', function(t) {
     t.true(validate)
 });
 
-test('number 错误验证', function(t) {
+test('number 错误验证.非 number', function(t) {
+    const schema = {
+        key1: {
+            type: Number,
+            required: true
+        }
+    };
+    const data = {
+        key1: '1'
+    };
+    const psv = new Psv(schema, data);
+    const validate = psv.validate();
+    t.false(validate)
+});
+
+test('number 错误验证.小于最小值', function(t) {
     const schema = {
         key1: {
             type: Number,
@@ -31,6 +46,23 @@ test('number 错误验证', function(t) {
     };
     const data = {
         key1: 1
+    };
+    const psv = new Psv(schema, data);
+    const validate = psv.validate();
+    t.false(validate)
+});
+
+test('number 错误验证.大于最大值', function(t) {
+    const schema = {
+        key1: {
+            type: Number,
+            max: 5,
+            min: 3,
+            required: true
+        }
+    };
+    const data = {
+        key1: 6
     };
     const psv = new Psv(schema, data);
     const validate = psv.validate();

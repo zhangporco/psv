@@ -35,6 +35,40 @@ test('string 错误验证', function(t) {
     t.false(validate)
 });
 
+test('string 错误验证--大于最大长度', function(t) {
+    const schema = {
+        key1: {
+            type: String,
+            max: 5,
+            min: 3,
+            required: true
+        }
+    };
+    const data = {
+        key1: '123456'
+    };
+    const psv = new Psv(schema, data);
+    const validate = psv.validate();
+    t.false(validate)
+});
+
+test('string 错误验证--小于最小长度', function(t) {
+    const schema = {
+        key1: {
+            type: String,
+            max: 5,
+            min: 3,
+            required: true
+        }
+    };
+    const data = {
+        key1: '1'
+    };
+    const psv = new Psv(schema, data);
+    const validate = psv.validate();
+    t.false(validate)
+});
+
 test('string pattern 正确验证', function(t) {
     const schema = {
         key1: {
