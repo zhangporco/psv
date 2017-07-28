@@ -124,6 +124,23 @@ const schema = {
 };
 ```
 
+如果你不希望对数组检测，或者说，数组元素类型不确定，可以采用 Array 定义，我们将不会对其进行类型检测
+
+```javascript
+const schema = {
+    array: {
+        type: Array,
+        max: 5,
+        min: 3,
+        required: true
+    }
+};
+const data = {
+    array: [1, '1', true, {}]
+};
+
+```
+
 ### 4.Boolean
 
 ```javascript
