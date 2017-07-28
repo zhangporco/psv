@@ -105,7 +105,7 @@ required ： 是否必须 （布尔）
 
 数组支持对象元素检测(可嵌套，同样，根据我们团队的实际应用场景，我们建议采用扁平化的数据结构设计)
 
-```
+```javascript
 const schema2 = {
     str: {
         type: String,
