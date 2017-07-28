@@ -1,4 +1,6 @@
 # Porco Schema Validate (psv)
+（自**2.1.7**版本之后，数组的定义改变，支持数组嵌套）
+
 **psv** 是一款轻量级 **js** 数据格式验证工具，相比于其他功能齐备的验证工具，**psv** 的优势在于体积非常小（之所以要写它，就是因为对其他 **validate** 框架不满意，我只是想要一个 **json** 验证，却给我一个 1M 的项目），最开始的核心代码只有 130 行。因此 **psv** 非常适合做小型项目、原型试错、个人 **demo** 以及教学。
 
 ## 下载、安装
@@ -88,7 +90,7 @@ required ： 是否必须 （布尔）
 
 ```javascript
 array: {
-    type: Array,
+    type: [Number],
     max: 5,
     min: 3,
     required: true
@@ -100,6 +102,27 @@ max ： 最大长度 （数字）
 min ： 最小长度 （数字）
 
 required ： 是否必须 （布尔）
+
+数组支持对象元素检测(可嵌套，同样，根据我们团队的实际应用场景，我们建议采用扁平化的数据结构设计)
+
+```
+const schema2 = {
+    str: {
+        type: String,
+        required: true
+    },
+    num: {
+        type: Number,
+        required: true
+    }
+};
+const schema = {
+    key: {
+        type: [schema2],
+        required: true
+    }
+};
+```
 
 ### 4.Boolean
 

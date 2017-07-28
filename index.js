@@ -27,23 +27,20 @@ Psv.prototype.forParams = function(schema, data) {
 };
 
 Psv.prototype.checkParam = function(schema, data, dKeys) {
-    switch (schema[dKeys] && schema[dKeys].type) {
-        case String:
-            this.checkError(string(schema, data, dKeys));
-            break;
-        case Number:
-            this.checkError(number(schema, data, dKeys));
-            break;
-        case Array:
-            this.checkError(array(schema, data, dKeys));
-            break;
-        case Boolean:
-            this.checkError(boolean(data, dKeys));
-            break;
-        default:
-            if (schema[dKeys] instanceof Object && data[dKeys]) {
-                this.forParams(schema[dKeys].type, data[dKeys]);
-            }
+    var type = schema[dKeys] && schema[dKeys].type;
+    if (!type) {
+        type = schema;
+    }
+    if (type === Number) {
+        this.checkError(number(schema, data, dKeys));
+    } else if (type === String) {
+        this.checkError(string(schema, data, dKeys));
+    } else if (type === Boolean) {
+        this.checkError(boolean(data, dKeys));
+    } else if (Object.prototype.toString.call(type) === '[object Array]') {
+        this.checkError(this.array(schema, data, dKeys));
+    } else if (schema[dKeys] instanceof Object && data[dKeys]) {
+        this.forParams(schema[dKeys].type, data[dKeys]);
     }
 };
 
@@ -65,6 +62,25 @@ Psv.prototype.printErrors = function() {
         console.error('\x1b[31m', this.errors[i]);
     }
 };
+
+Psv.prototype.array = function(schema, data, dKeys) {
+    var passes = data[dKeys] instanceof Array;
+    if (!passes) {
+        return { status: false, text: printText('字段 ' + dKeys + ' 不是 Array') };
+    }
+    var max = schema[dKeys].max;
+    if (max !== undefined && max > 0 && data[dKeys].length > max) {
+        return { status: false, text: printText('字段 ' + dKeys + ' 长度大于最大长度 ' + max) };
+    }
+    var min = schema[dKeys].min;
+    if (min !== undefined && min > 0 && data[dKeys].length < min) {
+        return { status: false, text: printText('字段 ' + dKeys + ' 长度小于最小长度 ' + min) };
+    }
+    for (var i = 0; i < data[dKeys].length; i++) {
+        this.forParams(schema[dKeys].type[0], data[dKeys][i]);
+    }
+    return { status: true, text: '' };
+}
 
 function required(schema, data) {
     var schemaKeys = Object.keys(schema);
@@ -89,15 +105,16 @@ function string(schema, data, dKeys) {
     if (!passes) {
         return { status: false, text: printText('字段 ' + dKeys + ' 不是 String') };
     }
-    var max = schema[dKeys].max;
+    var obj = schema[dKeys] ? schema[dKeys] : schema;
+    var max = obj.max;
     if (max !== undefined && max > 0 && data[dKeys].length > max) {
         return { status: false, text: printText('字段 ' + dKeys + ' 长度大于最大长度 ' + max) };
     }
-    var min = schema[dKeys].min;
+    var min = obj.min;
     if (min !== undefined && min > 0 && data[dKeys].length < min) {
         return { status: false, text: printText('字段 ' + dKeys + ' 长度小于最小长度 ' + min) };
     }
-    var pattern = schema[dKeys].pattern;
+    var pattern = obj.pattern;
     if (pattern !== undefined && !new RegExp(pattern).test(data[dKeys])) {
         return { status: false, text: printText('字段 ' + dKeys + ' 不符合 pattern') };
     }
@@ -109,29 +126,14 @@ function number(schema, data, dKeys) {
     if (!passes) {
         return { status: false, text: printText('字段 ' + dKeys + ' 不是 Number') };
     }
-    var max = schema[dKeys].max;
+    var obj = schema[dKeys] ? schema[dKeys] : schema;
+    var max = obj.max;
     if (max !== undefined && max > 0 && data[dKeys] > max) {
         return { status: false, text: printText('字段 ' + dKeys + ' 大于最大值 ' + max) };
     }
-    var min = schema[dKeys].min;
+    var min = obj.min;
     if (min !== undefined && min > 0 && data[dKeys] < min) {
         return { status: false, text: printText('字段 ' + dKeys + ' 小于最小值 ' + min) };
-    }
-    return { status: true, text: '' };
-}
-
-function array (schema, data, dKeys) {
-    var passes = data[dKeys] instanceof Array;
-    if (!passes) {
-        return { status: false, text: printText('字段 ' + dKeys + ' 不是 Array') };
-    }
-    var max = schema[dKeys].max;
-    if (max !== undefined && max > 0 && data[dKeys].length > max) {
-        return { status: false, text: printText('字段 ' + dKeys + ' 长度大于最大长度 ' + max) };
-    }
-    var min = schema[dKeys].min;
-    if (min !== undefined && min > 0 && data[dKeys].length < min) {
-        return { status: false, text: printText('字段 ' + dKeys + ' 长度小于最小长度 ' + min) };
     }
     return { status: true, text: '' };
 }

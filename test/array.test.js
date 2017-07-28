@@ -6,7 +6,7 @@ var Psv = require('../index.js');
 test('array 正确验证', function(t) {
     const schema = {
         key1: {
-            type: Array,
+            type: [Number],
             max: 5,
             min: 3,
             required: true
@@ -23,7 +23,7 @@ test('array 正确验证', function(t) {
 test('array 错误验证', function(t) {
     const schema = {
         key1: {
-            type: Array,
+            type: [Number],
             max: 5,
             min: 3,
             required: true
@@ -40,7 +40,7 @@ test('array 错误验证', function(t) {
 test('array 错误验证', function(t) {
     const schema = {
         key1: {
-            type: Array,
+            type: [Number],
             max: 5,
             min: 3,
             required: true
@@ -57,7 +57,7 @@ test('array 错误验证', function(t) {
 test('array 正确验证.嵌套', function(t) {
     const schema2 = {
         key3: {
-            type: Array,
+            type: [],
             required: true
         }
     };
@@ -80,7 +80,7 @@ test('array 正确验证.嵌套', function(t) {
 test('array 错误验证.嵌套', function(t) {
     const schema2 = {
         key3: {
-            type: Array,
+            type: [Number],
             required: true
         }
     };
@@ -98,5 +98,52 @@ test('array 错误验证.嵌套', function(t) {
     const psv = new Psv(schema, data);
     const validate = psv.validate();
     // psv.printErrors();
+    t.false(validate);
+});
+
+test('array 对象.嵌套', function(t) {
+    const schema2 = {
+        str: {
+            type: String,
+            required: true
+        },
+        num: {
+            type: Number,
+            required: true
+        }
+    };
+    const schema = {
+        key: {
+            type: [schema2],
+            required: true
+        }
+    };
+    const data = {
+        key: [
+            {str: '1', num: 0},
+            {str: '1', num: 0},
+        ]
+    };
+    const psv = new Psv(schema, data);
+    const validate = psv.validate();
+    psv.printErrors();
+    t.true(validate);
+});
+
+test('array 对象.嵌套.错误', function(t) {
+    const schema = {
+        key: {
+            type: [Number],
+            required: true
+        }
+    };
+    const data = {
+        key: [
+            {str: '1', num: 0},
+            {str: '1', num: 0},
+        ]
+    };
+    const psv = new Psv(schema, data);
+    const validate = psv.validate();
     t.false(validate);
 });
