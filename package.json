@@ -1,6 +1,6 @@
 {
   "name": "psv",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "description": "porco schema validate",
   "main": "index.js",
   "scripts": {

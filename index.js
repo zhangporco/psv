@@ -130,11 +130,11 @@ function number(schema, data, dKeys) {
     }
     var obj = schema[dKeys] ? schema[dKeys] : schema;
     var max = obj.max;
-    if (max !== undefined && max > 0 && data[dKeys] > max) {
+    if (max !== undefined && data[dKeys] > max) {
         return { status: false, text: printText('字段 ' + dKeys + ' 大于最大值 ' + max) };
     }
     var min = obj.min;
-    if (min !== undefined && min > 0 && data[dKeys] < min) {
+    if (min !== undefined && data[dKeys] < min) {
         return { status: false, text: printText('字段 ' + dKeys + ' 小于最小值 ' + min) };
     }
     var strEnum = obj.enum;
