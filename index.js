@@ -38,7 +38,7 @@ Psv.prototype.checkParam = function(schema, data, dKeys) {
     } else if (type === Boolean) {
         this.checkError(boolean(data, dKeys));
     } else if (Object.prototype.toString.call(type) === '[object Array]') {
-        this.checkError(this.array(schema, data, dKeys));
+        this.checkError(array(schema, data, dKeys, this));
     } else if (schema[dKeys] instanceof Object && data[dKeys]) {
         this.forParams(schema[dKeys].type, data[dKeys]);
     }
@@ -63,25 +63,6 @@ Psv.prototype.printErrors = function() {
     }
 };
 
-Psv.prototype.array = function(schema, data, dKeys) {
-    var passes = data[dKeys] instanceof Array;
-    if (!passes) {
-        return { status: false, text: printText('字段 ' + dKeys + ' 不是 Array') };
-    }
-    var max = schema[dKeys].max;
-    if (max !== undefined && max > 0 && data[dKeys].length > max) {
-        return { status: false, text: printText('字段 ' + dKeys + ' 长度大于最大长度 ' + max) };
-    }
-    var min = schema[dKeys].min;
-    if (min !== undefined && min > 0 && data[dKeys].length < min) {
-        return { status: false, text: printText('字段 ' + dKeys + ' 长度小于最小长度 ' + min) };
-    }
-    for (var i = 0; i < data[dKeys].length; i++) {
-        this.forParams(schema[dKeys].type[0], data[dKeys][i]);
-    }
-    return { status: true, text: '' };
-};
-
 function required(schema, data) {
     var schemaKeys = Object.keys(schema);
     var dataKeys = Object.keys(data);
@@ -98,6 +79,25 @@ function required(schema, data) {
         }
     }
     return { status: true, text: printText('') };
+}
+
+function array(schema, data, dKeys, scope) {
+    var passes = data[dKeys] instanceof Array;
+    if (!passes) {
+        return { status: false, text: printText('字段 ' + dKeys + ' 不是 Array') };
+    }
+    var max = schema[dKeys].max;
+    if (max !== undefined && max > 0 && data[dKeys].length > max) {
+        return { status: false, text: printText('字段 ' + dKeys + ' 长度大于最大长度 ' + max) };
+    }
+    var min = schema[dKeys].min;
+    if (min !== undefined && min > 0 && data[dKeys].length < min) {
+        return { status: false, text: printText('字段 ' + dKeys + ' 长度小于最小长度 ' + min) };
+    }
+    for (var i = 0; i < data[dKeys].length; i++) {
+        scope.forParams(schema[dKeys].type[0], data[dKeys][i]);
+    }
+    return { status: true, text: '' };
 }
 
 function string(schema, data, dKeys) {
