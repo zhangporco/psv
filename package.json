@@ -1,10 +1,10 @@
 {
   "name": "psv",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "description": "porco schema validate",
   "main": "index.js",
   "scripts": {
-    "test": "ava -v ./test/*.test.js",
+    "test": "ava -v ./test/number.test.js",
     "nyc": "nyc ava"
   },
   "repository": {

@@ -165,3 +165,35 @@ test('string 错误验证.嵌套', function(t) {
     const validate = psv.validate();
     t.false(validate)
 });
+
+test('string 正确验证.枚举', function(t) {
+    const schema = {
+        enum: {
+            type: String,
+            enum: ['1', '2', '3'],
+            required: true
+        }
+    };
+    const data = {
+        enum: '1'
+    };
+    const psv = new Psv(schema, data);
+    const validate = psv.validate();
+    t.true(validate)
+});
+
+test('string 错误验证.枚举', function(t) {
+    const schema = {
+        enum: {
+            type: String,
+            enum: ['1', '2', '3'],
+            required: true
+        }
+    };
+    const data = {
+        enum: 'w'
+    };
+    const psv = new Psv(schema, data);
+    const validate = psv.validate();
+    t.false(validate)
+});

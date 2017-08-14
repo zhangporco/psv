@@ -80,7 +80,7 @@ Psv.prototype.array = function(schema, data, dKeys) {
         this.forParams(schema[dKeys].type[0], data[dKeys][i]);
     }
     return { status: true, text: '' };
-}
+};
 
 function required(schema, data) {
     var schemaKeys = Object.keys(schema);
@@ -118,6 +118,10 @@ function string(schema, data, dKeys) {
     if (pattern !== undefined && !new RegExp(pattern).test(data[dKeys])) {
         return { status: false, text: printText('字段 ' + dKeys + ' 不符合 pattern') };
     }
+    var strEnum = obj.enum;
+    if (strEnum !== undefined && strEnum.indexOf(data[dKeys]) < 0) {
+        return { status: false, text: printText('字段 ' + dKeys + ' 不在 enum 中') };
+    }
     return { status: true, text: '' };
 }
 
@@ -134,6 +138,10 @@ function number(schema, data, dKeys) {
     var min = obj.min;
     if (min !== undefined && min > 0 && data[dKeys] < min) {
         return { status: false, text: printText('字段 ' + dKeys + ' 小于最小值 ' + min) };
+    }
+    var strEnum = obj.enum;
+    if (strEnum !== undefined && strEnum.indexOf(data[dKeys]) < 0) {
+        return { status: false, text: printText('字段 ' + dKeys + ' 不在 enum 中') };
     }
     return { status: true, text: '' };
 }
