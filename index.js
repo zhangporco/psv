@@ -101,8 +101,7 @@ function array(schema, data, dKeys, scope) {
 }
 
 function string(schema, data, dKeys) {
-    var passes = typeof data[dKeys] === 'string';
-    if (!passes) {
+    if (!checkType(data[dKeys], 'string')) {
         return { status: false, text: printText('字段 ' + dKeys + ' 不是 String') };
     }
     var obj = schema[dKeys] ? schema[dKeys] : schema;
@@ -126,8 +125,7 @@ function string(schema, data, dKeys) {
 }
 
 function number(schema, data, dKeys) {
-    var passes = typeof data[dKeys] === 'number';
-    if (!passes) {
+    if (!checkType(data[dKeys], 'number')) {
         return { status: false, text: printText('字段 ' + dKeys + ' 不是 Number') };
     }
     var obj = schema[dKeys] ? schema[dKeys] : schema;
@@ -147,11 +145,14 @@ function number(schema, data, dKeys) {
 }
 
 function boolean(data, dKeys) {
-    var passes = typeof data[dKeys] === 'boolean';
-    if (!passes) {
-        return { status: false, text: printText('字段 ' + dKeys + ' 不是 Boolean') };
+    if (!checkType(data[dKeys], 'boolean')) {
+        return {status: false, text: printText('字段 ' + dKeys + ' 不是 Boolean')};
     }
-    return { status: true, text: '' };
+    return {status: true, text: ''};
+}
+
+function checkType(data, type) {
+    return typeof data === type;
 }
 
 function printText(text) {
