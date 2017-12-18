@@ -20,7 +20,7 @@ Psv.prototype.validate = function() {
 
 Psv.prototype.forParams = function(schema, data) {
     var dataKeys = Object.keys(data);
-    this.checkError(required(schema, data));
+    this.required(schema, data);
     for (var i = 0; i < dataKeys.length; i++) {
         this.checkParam(schema, data, dataKeys[i]);
     }
@@ -63,7 +63,7 @@ Psv.prototype.printErrors = function() {
     }
 };
 
-function required(schema, data) {
+Psv.prototype.required = function (schema, data) {
     var schemaKeys = Object.keys(schema);
     var dataKeys = Object.keys(data);
     for (var i = 0; i < schemaKeys.length; i++) {
@@ -71,15 +71,14 @@ function required(schema, data) {
         if (schema[schemaKey].required) {
             if (dataKeys.indexOf(schemaKey) > -1) {
                 if (data[schemaKey] === null && schema[schemaKey].type !== Object) {
-                    return { status: false, text: printText('必填字段 ' + schemaKey + ' 不能为 null') };
+                    this.errors.push(printText('必填字段 ' + schemaKey + ' 不能为 null'));
                 }
             } else {
-                return { status: false, text: printText('缺少必填字段 ' + schemaKey) };
+                this.errors.push( printText('缺少必填字段 ' + schemaKey));
             }
         }
     }
-    return { status: true, text: printText('') };
-}
+};
 
 function array(schema, data, dKeys, scope) {
     var passes = data[dKeys] instanceof Array;

@@ -4,7 +4,7 @@
   "description": "porco schema validate",
   "main": "index.js",
   "scripts": {
-    "test": "ava -v ./test/*.test.js",
+    "test": "ava -v ./test/required.test.js",
     "nyc": "nyc ava"
   },
   "repository": {
