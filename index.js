@@ -38,13 +38,13 @@ Psv.prototype.checkParam = function(schema, data, dKeys) {
     } else if (type === Boolean) {
         this.checkError(boolean(data, dKeys));
     } else if (Object.prototype.toString.call(type) === '[object Array]') {
-        this.checkError(array(schema, data, dKeys, this));
+        this.checkError(array(schema, data, dKeys));
     } else if (schema[dKeys] instanceof Object && data[dKeys]) {
         this.forParams(schema[dKeys].type, data[dKeys]);
     }
 };
 
-Psv.prototype.checkError = function(result) {
+Psv.prototype.checkError = function(result, schema) {
     if (!result.status) {
         if (this.errors.indexOf(result.text) === -1) {
             this.errors.push(result.text);
@@ -63,24 +63,24 @@ Psv.prototype.printErrors = function() {
     }
 };
 
-Psv.prototype.required = function (schema, data) {
+Psv.prototype.required = function(schema, data) {
     var schemaKeys = Object.keys(schema);
     var dataKeys = Object.keys(data);
     for (var i = 0; i < schemaKeys.length; i++) {
         var schemaKey = schemaKeys[i];
-        if (schema[schemaKey].required) {
-            if (dataKeys.indexOf(schemaKey) > -1) {
-                if (data[schemaKey] === null && schema[schemaKey].type !== Object) {
-                    this.errors.push(printText('必填字段 ' + schemaKey + ' 不能为 null'));
-                }
-            } else {
-                this.errors.push( printText('缺少必填字段 ' + schemaKey));
+        if (schema[schemaKey].required && schema[schemaKey].type !== Object) {
+            if (!(dataKeys.indexOf(schemaKey) > -1 && data[schemaKey])) {
+                this.errors.push({
+                    schema: schema[schemaKey],
+                    data: data[schemaKey],
+                    errorText: schema[schemaKey].errorText ? schema[schemaKey].errorText : printText('缺少必填字段 ' + schemaKey)
+                });
             }
         }
     }
 };
 
-function array(schema, data, dKeys, scope) {
+Psv.prototype.array = function(schema, data, dKeys) {
     var passes = data[dKeys] instanceof Array;
     if (!passes) {
         return { status: false, text: printText('字段 ' + dKeys + ' 不是 Array') };
@@ -94,7 +94,7 @@ function array(schema, data, dKeys, scope) {
         return { status: false, text: printText('字段 ' + dKeys + ' 长度小于最小长度 ' + min) };
     }
     for (var i = 0; i < data[dKeys].length; i++) {
-        scope.forParams(schema[dKeys].type[0], data[dKeys][i]);
+        this.forParams(schema[dKeys].type[0], data[dKeys][i]);
     }
     return { status: true, text: '' };
 }

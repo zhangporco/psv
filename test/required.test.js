@@ -15,19 +15,20 @@ test('required 正确验证', function(t) {
         }
     };
     var data = {
-
+        key1: '1',
+        key2: '1'
     };
     var psv = new Psv(schema, data);
     var validate = psv.validate();
-    psv.printErrors();
-    t.true(true)
+    t.true(validate)
 });
 
-test.skip('required 错误验证', function(t) {
+test('required 错误验证', function(t) {
     var schema = {
         key1: {
             type: String,
-            required: true
+            required: true,
+            errorText: 'key1 必填'
         },
         key2: {
             type: String,
@@ -37,11 +38,11 @@ test.skip('required 错误验证', function(t) {
     var data = {};
     var psv = new Psv(schema, data);
     var validate = psv.validate();
-    // psv.printErrors();
+    psv.printErrors();
     t.false(validate)
 });
 
-test.skip('required 错误验证', function(t) {
+test('required 错误验证 null', function(t) {
     var schema = {
         key1: {
             type: String,
@@ -56,7 +57,22 @@ test.skip('required 错误验证', function(t) {
     t.false(validate)
 });
 
-test.skip('required 正确验证.非必填', function(t) {
+test('required 错误验证 空字符', function(t) {
+    var schema = {
+        key1: {
+            type: String,
+            required: true
+        }
+    };
+    var data = {
+        key1: ''
+    };
+    var psv = new Psv(schema, data);
+    var validate = psv.validate();
+    t.false(validate)
+});
+
+test('required 正确验证.非必填', function(t) {
     var schema = {
         key1: {
             type: String
@@ -71,7 +87,7 @@ test.skip('required 正确验证.非必填', function(t) {
     t.true(validate)
 });
 
-test.skip('required 正确验证.嵌套', function(t) {
+test('required 正确验证.嵌套', function(t) {
     var schema2 = {
         key3: {
             type: String,
@@ -94,7 +110,7 @@ test.skip('required 正确验证.嵌套', function(t) {
     t.true(validate)
 });
 
-test.skip('required 错误验证.嵌套', function(t) {
+test('required 错误验证.嵌套', function(t) {
     var schema2 = {
         key3: {
             type: String,
