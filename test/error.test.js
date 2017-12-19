@@ -21,7 +21,7 @@ test('error 对象验证', function(t) {
     var validate = psv.validate();
     if (!validate) {
         const errors = psv.getErrors();
-        psv.printErrors();
+        // psv.printErrors();
         t.true(errors.length > 0);
     }
 });

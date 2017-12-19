@@ -51,6 +51,7 @@ test('array 错误验证', function(t) {
     };
     const psv = new Psv(schema, data);
     const validate = psv.validate();
+    // psv.printErrors();
     t.false(validate);
 });
 
@@ -118,7 +119,7 @@ test('array 错误验证.嵌套', function(t) {
     t.false(validate);
 });
 
-test('array 对象.嵌套', function(t) {
+test.skip('array 对象.嵌套', function(t) {
     const schema2 = {
         str: {
             type: String,
@@ -138,12 +139,11 @@ test('array 对象.嵌套', function(t) {
     const data = {
         key: [
             {str: '1', num: 0},
-            {str: '1', num: 0},
+            {str: '1', num: 0}
         ]
     };
     const psv = new Psv(schema, data);
     const validate = psv.validate();
-    psv.printErrors();
     t.true(validate);
 });
 
@@ -157,10 +157,11 @@ test('array 对象.嵌套.错误', function(t) {
     const data = {
         key: [
             {str: '1', num: 0},
-            {str: '1', num: 0},
+            {str: '1', num: 0}
         ]
     };
     const psv = new Psv(schema, data);
     const validate = psv.validate();
+    // psv.printErrors();
     t.false(validate);
 });

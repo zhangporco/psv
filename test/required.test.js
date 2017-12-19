@@ -38,7 +38,7 @@ test('required 错误验证', function(t) {
     var data = {};
     var psv = new Psv(schema, data);
     var validate = psv.validate();
-    psv.printErrors();
+    // psv.printErrors();
     t.false(validate)
 });
 
