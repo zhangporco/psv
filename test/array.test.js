@@ -119,7 +119,7 @@ test('array 错误验证.嵌套', function(t) {
     t.false(validate);
 });
 
-test.skip('array 对象.嵌套', function(t) {
+test('array 对象.嵌套', function(t) {
     const schema2 = {
         str: {
             type: String,
