@@ -14,8 +14,7 @@ function Psv(schema, data) {
 
 Psv.prototype.validate = function() {
     this.forParams(this.schema, this.data);
-    if (this.errors && this.errors.length) return false;
-    return true;
+    return !(this.errors && this.errors.length);
 };
 
 Psv.prototype.forParams = function(schema, data) {
@@ -70,11 +69,7 @@ Psv.prototype.required = function(schema, data) {
         var schemaKey = schemaKeys[i];
         if (schema[schemaKey].required && schema[schemaKey].type !== Object) {
             if (!(dataKeys.indexOf(schemaKey) > -1 && (data[schemaKey] !== null && data[schemaKey] !== ''))) {
-                this.errors.push({
-                    schema: schema[schemaKey],
-                    data: data[schemaKey],
-                    errorText: schema[schemaKey].errorText ? schema[schemaKey].errorText : printText('缺少必填字段 ' + schemaKey)
-                });
+                this.generateError(schema[schemaKey], data[schemaKey], schema[schemaKey].errorText ? schema[schemaKey].errorText : printText('缺少必填字段 ' + schemaKey));
             }
         }
     }
@@ -83,27 +78,15 @@ Psv.prototype.required = function(schema, data) {
 Psv.prototype.array = function(schema, data, dKeys) {
     var passes = data[dKeys] instanceof Array;
     if (!passes) {
-        this.errors.push({
-            schema: schema[dKeys],
-            data: data[dKeys],
-            errorText: schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 不是 Array')
-        });
+        this.generateError(schema[dKeys], data[dKeys], schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 不是 Array'));
     }
     var max = schema[dKeys].max;
     if (max !== undefined && max > 0 && data[dKeys].length > max) {
-        this.errors.push({
-            schema: schema[dKeys],
-            data: data[dKeys],
-            errorText: schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 长度大于最大长度 ' + max)
-        });
+        this.generateError(schema[dKeys], data[dKeys], schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 长度大于最大长度 ' + max));
     }
     var min = schema[dKeys].min;
     if (min !== undefined && min > 0 && data[dKeys].length < min) {
-        this.errors.push({
-            schema: schema[dKeys],
-            data: data[dKeys],
-            errorText: schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 长度小于最小长度 ' + min)
-        });
+        this.generateError(schema[dKeys], data[dKeys], schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 长度小于最小长度 ' + min));
     }
     for (var i = 0; i < data[dKeys].length; i++) {
         this.forParams(schema[dKeys].type[0], data[dKeys][i]);
@@ -112,90 +95,58 @@ Psv.prototype.array = function(schema, data, dKeys) {
 
 Psv.prototype.string = function(schema, data, dKeys) {
     if (!checkType(data[dKeys], 'string')) {
-        this.errors.push({
-            schema: schema[dKeys],
-            data: data[dKeys],
-            errorText: schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 不是 String')
-        });
+        this.generateError(schema[dKeys], data[dKeys], schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 不是 String'));
     }
     var obj = schema[dKeys] ? schema[dKeys] : schema;
     var max = obj.max;
     if (max !== undefined && max > 0 && data[dKeys].length > max) {
-        this.errors.push({
-            schema: schema[dKeys],
-            data: data[dKeys],
-            errorText: schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 长度大于最大长度 ' + max)
-        });
+        this.generateError(schema[dKeys], data[dKeys], schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 长度大于最大长度 ' + max));
     }
     var min = obj.min;
     if (min !== undefined && min > 0 && data[dKeys].length < min) {
-        this.errors.push({
-            schema: schema[dKeys],
-            data: data[dKeys],
-            errorText: schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 长度小于最小长度 ' + min)
-        });
+        this.generateError(schema[dKeys], data[dKeys], schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 长度小于最小长度 ' + min));
     }
     var pattern = obj.pattern;
     if (pattern !== undefined && !new RegExp(pattern).test(data[dKeys])) {
-        this.errors.push({
-            schema: schema[dKeys],
-            data: data[dKeys],
-            errorText: schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 不符合 pattern')
-        });
+        this.generateError(schema[dKeys], data[dKeys], schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 不符合 pattern'));
     }
     var strEnum = obj.enum;
     if (strEnum !== undefined && strEnum.indexOf(data[dKeys]) < 0) {
-        this.errors.push({
-            schema: schema[dKeys],
-            data: data[dKeys],
-            errorText: schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 不在 enum 中')
-        });
+        this.generateError(schema[dKeys], data[dKeys], schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 不在 enum 中'));
     }
 };
 
 Psv.prototype.number = function(schema, data, dKeys) {
     if (!checkType(data[dKeys], 'number')) {
-        this.errors.push({
-            schema: schema[dKeys],
-            data: data[dKeys],
-            errorText: schema[dKeys] && schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 不是 Number')
-        });
+        this.generateError(schema[dKeys], data[dKeys], schema[dKeys] && schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 不是 Number'));
     }
     var obj = schema[dKeys] ? schema[dKeys] : schema;
     var max = obj.max;
     if (max !== undefined && data[dKeys] > max) {
-        this.errors.push({
-            schema: schema[dKeys],
-            data: data[dKeys],
-            errorText: schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 大于最大值 ' + max)
-        });
+        this.generateError(schema[dKeys], data[dKeys], schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 大于最大值 ' + max));
     }
     var min = obj.min;
     if (min !== undefined && data[dKeys] < min) {
-        this.errors.push({
-            schema: schema[dKeys],
-            data: data[dKeys],
-            errorText: schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 小于最小值 ' + min)
-        });
+        this.generateError(schema[dKeys], data[dKeys], schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 小于最小值 ' + min));
     }
     var strEnum = obj.enum;
     if (strEnum !== undefined && strEnum.indexOf(data[dKeys]) < 0) {
-        this.errors.push({
-            schema: schema[dKeys],
-            data: data[dKeys],
-            errorText: schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 不在 enum 中')
-        });
+        this.generateError(schema[dKeys], data[dKeys], schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 不在 enum 中'));
     }
 };
 
 Psv.prototype.boolean = function(schema, data, dKeys) {
     if (!checkType(data[dKeys], 'boolean')) {
-        this.errors.push({
-            schema: schema[dKeys],
-            data: data[dKeys],
-            errorText: schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 不是 Boolean')
-        });
+        this.generateError(schema[dKeys], data[dKeys], schema[dKeys].errorText ? schema[dKeys].errorText : printText('字段 ' + dKeys + ' 不是 Boolean'));
     }
+};
+
+Psv.prototype.generateError = function(schema, data, text) {
+    this.errors.push({
+        schema: schema,
+        data: data,
+        errorText: text
+    });
 };
 
 function checkType(data, type) {
