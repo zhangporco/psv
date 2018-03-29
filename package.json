@@ -1,6 +1,6 @@
 {
   "name": "psv",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "description": "porco schema validate",
   "main": "index.js",
   "scripts": {
@@ -18,12 +18,12 @@
     "validate"
   ],
   "author": "Porco",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/zhangporco/psv/issues",
     "email": "zhangporco@gmail.com"
   },
-  "homepage": "https://github.com/zhangporco/psv#readme",
+  "homepage": "https://github.com/zhangporco/psv",
   "dependencies": {},
   "devDependencies": {
     "ava": "^0.24.0",
