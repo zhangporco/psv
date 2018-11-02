@@ -1,12 +1,12 @@
 {
   "name": "psv",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "porco schema validate",
-  "main": "./lib/Psv",
+  "main": "./lib",
   "scripts": {
     "test": "ava --verbose",
     "nyc": "nyc ava",
-    "build": "babel src -d lib"
+    "build": "rm -rf ./lib && babel src -d lib"
   },
   "ava": {
     "files": [

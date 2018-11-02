@@ -1,5 +1,5 @@
 import test from 'ava';
-import Psv from '../src/Psv';
+import Index from '../src/index';
 
 test('boolean 正确测试', function (t) {
 	const schema = {
@@ -11,7 +11,7 @@ test('boolean 正确测试', function (t) {
 	const data = {
 		key1: true
 	};
-	const psv = new Psv(schema, data);
+	const psv = new Index(schema, data);
 	const validate = psv.validate();
 	t.true(validate)
 });
@@ -26,7 +26,7 @@ test('boolean 错误测试', function (t) {
 	const data = {
 		key1: 1
 	};
-	const psv = new Psv(schema, data);
+	const psv = new Index(schema, data);
 	const validate = psv.validate();
 	t.false(validate)
 });

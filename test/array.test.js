@@ -1,5 +1,5 @@
 import test from 'ava';
-import Psv from '../src/Psv';
+import Index from '../src/index';
 
 test('array 正确验证', function (t) {
 	const schema = {
@@ -13,7 +13,7 @@ test('array 正确验证', function (t) {
 	const data = {
 		key1: [ 1, 2, 3 ]
 	};
-	const psv = new Psv(schema, data);
+	const psv = new Index(schema, data);
 	const validate = psv.validate();
 	t.true(validate);
 });
@@ -30,7 +30,7 @@ test('array 正确验证2', function (t) {
 	const data = {
 		array: [ 1, '1', true, {} ]
 	};
-	const psv = new Psv(schema, data);
+	const psv = new Index(schema, data);
 	const validate = psv.validate();
 	t.true(validate);
 });
@@ -47,7 +47,7 @@ test('array 错误验证', function (t) {
 	const data = {
 		key1: [ 1 ]
 	};
-	const psv = new Psv(schema, data);
+	const psv = new Index(schema, data);
 	const validate = psv.validate();
 	// psv.printErrors();
 	t.false(validate);
@@ -65,7 +65,7 @@ test('array 错误验证2', function (t) {
 	const data = {
 		key1: [ 1, 2, 3, 4, 5, 6 ]
 	};
-	const psv = new Psv(schema, data);
+	const psv = new Index(schema, data);
 	const validate = psv.validate();
 	// psv.printErrors();
 	t.false(validate);
@@ -89,7 +89,7 @@ test('array 正确验证.嵌套', function (t) {
 			key3: []
 		}
 	};
-	const psv = new Psv(schema, data);
+	const psv = new Index(schema, data);
 	const validate = psv.validate();
 	t.true(validate);
 });
@@ -112,7 +112,7 @@ test('array 错误验证.嵌套', function (t) {
 			key3: 1
 		}
 	};
-	const psv = new Psv(schema, data);
+	const psv = new Index(schema, data);
 	const validate = psv.validate();
 	// psv.printErrors();
 	t.false(validate);
@@ -141,7 +141,7 @@ test('array 对象.嵌套', function (t) {
 			{ str: '1', num: 0 }
 		]
 	};
-	const psv = new Psv(schema, data);
+	const psv = new Index(schema, data);
 	const validate = psv.validate();
 	t.true(validate);
 });
@@ -160,7 +160,7 @@ test('array 对象.嵌套.错误 1', function (t) {
 			{ str: '1', num: 1 }
 		]
 	};
-	const psv = new Psv(schema, data);
+	const psv = new Index(schema, data);
 	const validate = psv.validate();
 	// psv.printErrors();
 	t.false(validate);
@@ -193,7 +193,7 @@ test('array 对象.嵌套.错误 1', function (t) {
 			{ obj: "1"}
 		]
 	};
-	const psv = new Psv(schema, data);
+	const psv = new Index(schema, data);
 	const validate = psv.validate();
 	// psv.printErrors();
 	t.false(validate);

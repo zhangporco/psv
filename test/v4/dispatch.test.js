@@ -1,5 +1,5 @@
 import test from 'ava';
-import Psv from '../../src/Psv';
+import Psv from '../../src';
 
 test('dispatch 验证', function (t) {
 	const array2 = {

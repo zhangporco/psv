@@ -93,12 +93,12 @@ var data = {
     obj: {},
 }
 ```
-接着我们导入并创建 **Psv** 对象进行验证
+接着我们导入并创建 **Index** 对象进行验证
 
 ```javascript
-import Psv from 'psv';
+import Index from 'psv';
 function testPsv(schema, data) {
-	const psv = new Psv(schema, data);
+	const psv = new Index(schema, data);
 	const validate = psv.validate();
 	if (!validate) {
 		psv.printErrors();

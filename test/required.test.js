@@ -1,5 +1,5 @@
 import test from 'ava';
-import Psv from '../src/Psv';
+import Index from '../src/index';
 
 test('required 正确验证', function (t) {
 	var schema = {
@@ -16,7 +16,7 @@ test('required 正确验证', function (t) {
 		key1: '1',
 		key2: '1'
 	};
-	var psv = new Psv(schema, data);
+	var psv = new Index(schema, data);
 	var validate = psv.validate();
 	t.true(validate)
 });
@@ -34,7 +34,7 @@ test('required 错误验证', function (t) {
 		}
 	};
 	var data = {};
-	var psv = new Psv(schema, data);
+	var psv = new Index(schema, data);
 	var validate = psv.validate();
 	// psv.printErrors();
 	t.false(validate)
@@ -50,7 +50,7 @@ test('required 错误验证 null', function (t) {
 	var data = {
 		key1: null
 	};
-	var psv = new Psv(schema, data);
+	var psv = new Index(schema, data);
 	var validate = psv.validate();
 	// psv.printErrors();
 	t.false(validate)
@@ -66,7 +66,7 @@ test('required 错误验证 空字符', function (t) {
 	var data = {
 		key1: ''
 	};
-	var psv = new Psv(schema, data);
+	var psv = new Index(schema, data);
 	var validate = psv.validate();
 	t.true(validate)
 });
@@ -83,7 +83,7 @@ test('required 正确验证.非必填', function (t) {
 	var data = {
 		key1: ''
 	};
-	var psv = new Psv(schema, data);
+	var psv = new Index(schema, data);
 	var validate = psv.validate();
 	psv.printErrors();
 	t.true(validate)
@@ -107,7 +107,7 @@ test('required 正确验证.嵌套', function (t) {
 			key3: 'psv'
 		}
 	};
-	var psv = new Psv(schema, data);
+	var psv = new Index(schema, data);
 	var validate = psv.validate();
 	t.true(validate)
 });
@@ -128,7 +128,7 @@ test('required 错误验证.嵌套', function (t) {
 	var data = {
 		key1: {}
 	};
-	var psv = new Psv(schema, data);
+	var psv = new Index(schema, data);
 	var validate = psv.validate();
 	t.false(validate)
 });

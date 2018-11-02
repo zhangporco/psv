@@ -1,5 +1,5 @@
 /**
- * Psv
+ * Index
  * js 数据校验工具
  * @author Porco
  * @Created 14/07/2017
@@ -7,7 +7,7 @@
 
 import { Check } from './Check';
 
-export default class Psv {
+export default class Index {
 	constructor(schema, data) {
 		this.schema = schema;
 		this.data = data;
