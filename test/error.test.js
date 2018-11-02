@@ -1,5 +1,5 @@
 import test from 'ava';
-import Index from '../src/index';
+import Psv from '../src/Psv';
 
 test('error 对象验证', function (t) {
 	var schema = {
@@ -15,7 +15,7 @@ test('error 对象验证', function (t) {
 	var data = {
 		key1: 'psv'
 	};
-	var psv = new Index(schema, data);
+	var psv = new Psv(schema, data);
 	var validate = psv.validate();
 	if (!validate) {
 		const errors = psv.getErrors();

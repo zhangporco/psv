@@ -7,7 +7,7 @@
 
 import { Check } from './Check';
 
-export default class Index {
+export default class Psv {
 	constructor(schema, data) {
 		this.schema = schema;
 		this.data = data;
