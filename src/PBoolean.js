@@ -1,7 +1,7 @@
 /**
  * Boolean 校验
  */
-export default class boolean {
+export default class PBoolean {
 	constructor() {
 		this.error = [];
 		this.defaultError = {

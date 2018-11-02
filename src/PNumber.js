@@ -1,24 +1,20 @@
 /**
- * String 校验
+ * Number 校验
  */
-import number from './number';
-
-export default class string {
+export default class PNumber {
 	constructor() {
 		this.error = [];
 		this.defaultError = {
-			type: '不是 String',
+			type: '不是 Number',
 			required: '必填，不能为空',
-			max: '超过最大长度',
-			min: '低于最小长度',
+			max: '超过最大值',
+			min: '低于最小值',
 			enum: '不在枚举中',
-			regex: '违背正则表达式',
-			pattern: '违背正则表达式',
 		}
 	}
 	
 	/**
-	 * String 校验入口
+	 * Number 类型校验入口
 	 * @param schema
 	 * @param data
 	 * @param key
@@ -31,7 +27,7 @@ export default class string {
 			this.error.push(this.getError(schema, key, 'required'));
 			return this.error;
 		}
-		if (!this.isString(data[key])) {
+		if (!this.isNumber(data[key])) {
 			this.error.push(this.getError(schema, key, 'type'));
 			return this.error;
 		}
@@ -44,9 +40,6 @@ export default class string {
 		if (!this.enum(schema[key], data[key])) {
 			this.error.push(this.getError(schema, key, 'enum'));
 		}
-		if (!this.regex(schema[key], data[key])) {
-			this.error.push(this.getError(schema, key, 'regex'));
-		}
 		return this.error;
 	}
 	
@@ -58,42 +51,42 @@ export default class string {
 	 */
 	required(schema, data) {
 		if (!schema.required) return true;
-		return data !== undefined && data !== null;
+		return data !== undefined;
 	}
 	
 	/**
-	 * 是否为 String 校验
+	 * 是否为 Number
 	 * @param v
 	 * @returns {boolean}
 	 */
-	isString(v) {
-		return typeof v === 'string';
+	isNumber(v) {
+		return Number.isFinite(v);
 	}
 	
 	/**
-	 * 最大长度 校验
+	 * 最大值 校验
 	 * @param schema
 	 * @param data
 	 * @returns {boolean}
 	 */
 	max(schema, data) {
-		if (!new number().isNumber(schema.max)) return true;
-		return data.length <= schema.max;
+		if (!this.isNumber(schema.max)) return true;
+		return data <= schema.max;
 	}
 	
 	/**
-	 * 最小长度校验
+	 * 最小值 校验
 	 * @param schema
 	 * @param data
 	 * @returns {boolean}
 	 */
 	min(schema, data) {
-		if (!new number().isNumber(schema.min)) return true;
-		return data.length >= schema.min;
+		if (!this.isNumber(schema.min)) return true;
+		return data >= schema.min;
 	}
 	
 	/**
-	 * 枚举校验
+	 * 枚举 校验
 	 * @param schema
 	 * @param data
 	 * @returns {boolean}
@@ -101,23 +94,6 @@ export default class string {
 	enum(schema, data) {
 		if (!Array.isArray(schema.enum)) return true;
 		return schema.enum.indexOf(data) > -1;
-	}
-	
-	/**
-	 * 正则表达式 校验
-	 * regex 拥有最高优先级
-	 * pattern - 不推荐使用
-	 * @param schema
-	 * @param data
-	 * @returns {boolean}
-	 */
-	regex(schema, data) {
-		if (this.isString(schema.regex)) {
-			return new RegExp(schema.regex).test(data);
-		} else if (this.isString(schema.pattern)) {
-			return new RegExp(schema.pattern).test(data);
-		}
-		return true;
 	}
 	
 	/**
