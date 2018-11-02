@@ -2,31 +2,30 @@ import test from 'ava';
 import Psv from '../../src/Psv';
 
 test('dispatch 验证', function (t) {
-	const schema1 = {
-		str: {
+	const array2 = {
+		phone: {
 			type: String,
 			required: true,
-			max: 3,
-			min: 2,
-			enum: ['12', '13', '14'],
-			regex: '^[8-9]*$',
-			pattern: '^[5-9]*$',
-			error: {
-				max: '不能超过 max',
-				enum: 'enum 必须正确',
-			}
+			regex: '^[1][3,4,5,7,8][0-9]{9}$',
+		},
+		roles: {
+			type: Array,
+			required: true,
 		},
 	};
 	const schema = {
-		key1: {
-			type: schema1,
+		array: {
+			type: [array2],
 			required: true
 		},
 	};
 	const data = {
-		key1: {
-			str: '5667'
-		},
+		array: [
+			{
+				phone: 'x111',
+				roles: []
+			},
+		],
 	};
 	const psv = new Psv(schema, data);
 	const validate = psv.validate();
