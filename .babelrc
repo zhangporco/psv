@@ -1,0 +1,8 @@
+{
+  "presets" : ["es2017-node7", "stage-0"],
+  "plugins": [
+    "transform-decorators",
+    "transform-async-to-generator",
+    "transform-decorators-legacy"
+  ]
+}
