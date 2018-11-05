@@ -72,7 +72,7 @@ var schema = {
         },
     },
     obj: {
-    	type: Array, 
+    	type: Object, 
         required: true,
         error: {          // 自定义错误提示
             type: '类型错误',
