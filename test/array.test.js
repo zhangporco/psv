@@ -199,3 +199,18 @@ test('array 对象.嵌套.错误 1', function (t) {
 	t.false(validate);
 });
 
+test('array default 正确', function (t) {
+	const schema = {
+		array: {
+			type: Number,
+			default: [1]
+		}
+	};
+	const data = {
+	
+	};
+	const psv = new Psv(schema, data);
+	const validate = psv.validate();
+	t.is(data.array[0], 1)
+});
+

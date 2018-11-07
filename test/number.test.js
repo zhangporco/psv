@@ -144,3 +144,18 @@ test('number 错误验证.枚举', function (t) {
 	const validate = psv.validate();
 	t.false(validate)
 });
+
+test('number default 正确', function (t) {
+	const schema = {
+		num: {
+			type: Number,
+			default: 1
+		}
+	};
+	const data = {
+	
+	};
+	const psv = new Psv(schema, data);
+	const validate = psv.validate();
+	t.is(data.num, 1)
+});

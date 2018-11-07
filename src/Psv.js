@@ -18,7 +18,7 @@ export default class Psv {
 	 * 验证入口
 	 */
 	validate() {
-		const errors = new Check().iterator(this.schema, this.data);
+		const errors = new Check().validate(this.schema, this.data);
 		this.errors = errors;
 		return errors && errors.length === 0;
 	}

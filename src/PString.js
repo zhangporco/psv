@@ -1,12 +1,11 @@
 /**
  * String 校验
  */
-import PNumber from './PNumber';
+import Base from './Base';
 
-export default class PString {
+export default class PString extends Base {
 	constructor() {
-		this.error = [];
-		this.defaultError = {
+		super({
 			type: '不是 String',
 			required: '必填，不能为空',
 			max: '超过最大长度',
@@ -14,8 +13,10 @@ export default class PString {
 			enum: '不在枚举中',
 			regex: '违背正则表达式',
 			pattern: '违背正则表达式',
-		}
+		});
+		this.error = [];
 	}
+	
 	
 	/**
 	 * String 校验入口
@@ -25,82 +26,106 @@ export default class PString {
 	 * @returns {Array}
 	 */
 	validate(schema, data, key) {
-		if (!schema[key].required &&
-			(data[key] === undefined || data[key] === null)) return this.error;
-		if (!this.required(schema[key], data[key])) {
-			this.error.push(this.getError(schema, key, 'required'));
-			return this.error;
+		if (data[key] === undefined || data[key] === null) {
+			data[key] = schema[key].default ? schema[key].default : data[key];
+		} else if (schema[key].trim) {
+			data[key] = data[key].replace(/^\s+|\s+$/g, '');
 		}
-		if (!this.isString(data[key])) {
-			this.error.push(this.getError(schema, key, 'type'));
-			return this.error;
-		}
-		if (!this.max(schema[key], data[key])) {
-			this.error.push(this.getError(schema, key, 'max'));
-		}
-		if (!this.min(schema[key], data[key])) {
-			this.error.push(this.getError(schema, key, 'min'));
-		}
-		if (!this.enum(schema[key], data[key])) {
-			this.error.push(this.getError(schema, key, 'enum'));
-		}
-		if (!this.regex(schema[key], data[key])) {
-			this.error.push(this.getError(schema, key, 'regex'));
-		}
+		
+		if (!schema[key].required && (data[key] === undefined || data[key] === null)) return this.error;
+		
+		if (!this.required(schema, data, key)) return this.error;
+		if (!this.isString(schema, data, key)) return this.error;
+		
+		this.max(schema, data, key);
+		this.min(schema, data, key);
+		this.enum(schema, data, key);
+		this.regex(schema, data, key);
 		return this.error;
 	}
+	
 	
 	/**
 	 * 必填 校验
 	 * @param schema
 	 * @param data
+	 * @param key
 	 * @returns {boolean}
 	 */
-	required(schema, data) {
-		if (!schema.required) return true;
-		return data !== undefined && data !== null;
+	required(schema, data, key) {
+		if (schema[key].required) {
+			if (data[key] === undefined || data[key] === null) {
+				this.error.push(this.getError(schema, key, 'required'));
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**
 	 * 是否为 String 校验
-	 * @param v
+	 * @param schema
+	 * @param data
+	 * @param key
 	 * @returns {boolean}
 	 */
-	isString(v) {
-		return typeof v === 'string';
+	isString(schema, data, key) {
+		if (typeof data[key] !== 'string') {
+			this.error.push(this.getError(schema, key, 'type'));
+			return false;
+		}
+		return true;
 	}
 	
 	/**
 	 * 最大长度 校验
 	 * @param schema
 	 * @param data
+	 * @param key
 	 * @returns {boolean}
 	 */
-	max(schema, data) {
-		if (!new PNumber().isNumber(schema.max)) return true;
-		return data.length <= schema.max;
+	max(schema, data, key) {
+		if (Number.isFinite(schema[key].max)) {
+			if (data[key].length > schema[key].max) {
+				this.error.push(this.getError(schema, key, 'max'));
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**
 	 * 最小长度校验
 	 * @param schema
 	 * @param data
+	 * @param key
 	 * @returns {boolean}
 	 */
-	min(schema, data) {
-		if (!new PNumber().isNumber(schema.min)) return true;
-		return data.length >= schema.min;
+	min(schema, data, key) {
+		if (Number.isFinite(schema[key].min)) {
+			if (data[key].length < schema[key].min) {
+				this.error.push(this.getError(schema, key, 'min'));
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**
 	 * 枚举校验
 	 * @param schema
 	 * @param data
+	 * @param key
 	 * @returns {boolean}
 	 */
-	enum(schema, data) {
-		if (!Array.isArray(schema.enum)) return true;
-		return schema.enum.indexOf(data) > -1;
+	enum(schema, data, key) {
+		if (Array.isArray(schema[key].enum)) {
+			if (schema[key].enum.indexOf(data[key]) < 0) {
+				this.error.push(this.getError(schema, key, 'enum'));
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**
@@ -109,30 +134,21 @@ export default class PString {
 	 * pattern - 不推荐使用
 	 * @param schema
 	 * @param data
+	 * @param key
 	 * @returns {boolean}
 	 */
-	regex(schema, data) {
-		if (this.isString(schema.regex)) {
-			return new RegExp(schema.regex).test(data);
-		} else if (this.isString(schema.pattern)) {
-			return new RegExp(schema.pattern).test(data);
+	regex(schema, data, key) {
+		if (typeof schema[key].regex === 'string') {
+			if (!new RegExp(schema[key].regex).test(data[key])) {
+				this.error.push(this.getError(schema, key, 'regex'));
+				return false;
+			}
+		} else if (typeof schema[key].pattern === 'string') {
+			if (!new RegExp(schema[key].pattern).test(data[key])) {
+				this.error.push(this.getError(schema, key, 'regex'));
+				return false;
+			}
 		}
 		return true;
-	}
-	
-	/**
-	 * 获取错误提示信息，若不传会使用默认值
-	 * @param schema
-	 * @param key
-	 * @param type
-	 * @returns {PString}
-	 */
-	getError(schema, key, type) {
-		const err = schema[key].error ?
-			schema[key].error[type] ?
-				schema[key].error[type] : `
-				${key}: ${this.defaultError[type]}` :
-			`${key}: ${this.defaultError[type]}`;
-		return err;
 	}
 }

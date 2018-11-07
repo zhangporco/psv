@@ -1,51 +1,45 @@
 /**
  * Boolean 校验
  */
-export default class PBoolean {
+import Base from './Base';
+
+export default class PBoolean extends Base {
 	constructor() {
-		this.error = [];
-		this.defaultError = {
+		super({
 			type: '不是 Boolean',
 			required: '必填，不能为空',
-		}
+		});
+		this.error = [];
 	}
 	
 	validate(schema, data, key) {
-		if (!schema[key].required &&
-			(data[key] === undefined || data[key] === null)) return this.error;
-		if (!this.required(schema[key], data[key])) {
-			this.error.push(this.getError(schema, key, 'required'));
-			return this.error;
+		if (data[key] === undefined || data[key] === null) {
+			data[key] = schema[key].default ? schema[key].default : data[key];
 		}
-		if (!this.isBoolean(data[key])) {
-			this.error.push(this.getError(schema, key, 'type'));
-			return this.error;
-		}
+		if (!schema[key].required && (data[key] === undefined || data[key] === null)) return this.error;
+		
+		if (!this.required(schema, data, key)) return this.error;
+		if (!this.isBoolean(schema, data, key)) return this.error;
+		
 		return this.error;
 	}
 	
-	required(schema, data) {
-		if (!schema.required) return true;
-		return data !== undefined;
+	
+	required(schema, data, key) {
+		if (schema[key].required) {
+			if (data[key] === undefined || data[key] === null) {
+				this.error.push(this.getError(schema, key, 'required'));
+				return false;
+			}
+		}
+		return true;
 	}
 	
-	isBoolean(v) {
-		return typeof v === 'boolean';
-	}
-	
-	/**
-	 * 获取错误提示信息，若不传会使用默认值
-	 * @param schema
-	 * @param key
-	 * @param type
-	 * @returns {string}
-	 */
-	getError(schema, key, type) {
-		const err = schema[key].error ?
-			schema[key].error[type] ?
-				schema[key].error[type] : `
-				${key}: ${this.defaultError[type]}` :
-			`${key}: ${this.defaultError[type]}`;
-		return err;
+	isBoolean(schema, data, key) {
+		if (typeof data[key] !== 'boolean') {
+			this.error.push(this.getError(schema, key, 'type'));
+			return false;
+		}
+		return true;
 	}
 }

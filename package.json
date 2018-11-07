@@ -1,6 +1,6 @@
 {
   "name": "psv",
-  "version": "4.0.4",
+  "version": "4.1.1",
   "description": "porco schema validate",
   "main": "./lib/Psv",
   "scripts": {

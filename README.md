@@ -93,12 +93,12 @@ var data = {
     obj: {},
 }
 ```
-接着我们导入并创建 **Index** 对象进行验证
+接着我们导入并创建 **Psv** 对象进行验证
 
 ```javascript
-import Index from 'psv';
+import Psv from 'psv';
 function testPsv(schema, data) {
-	const psv = new Index(schema, data);
+	const psv = new Psv(schema, data);
 	const validate = psv.validate();
 	if (!validate) {
 		psv.printErrors();
@@ -110,6 +110,8 @@ function testPsv(schema, data) {
 - 数据类型
     - String
         - type
+        - default   // 默认值
+        - trim      // 去除数据两边空格，默认 false
         - required
         - max
         - min
@@ -126,6 +128,7 @@ function testPsv(schema, data) {
             - pattern （pattern 错误提示信息）
     - Number
         - type
+        - default
         - required
         - max
         - min
@@ -138,6 +141,7 @@ function testPsv(schema, data) {
             - enum
     - Array
         - type
+        - default
         - required
         - max
         - min
@@ -148,12 +152,14 @@ function testPsv(schema, data) {
             - min
     - Boolean
         - type
+        - default
         - required
         - error
             - type
             - required
     - Object
         - type
+        - default
         - required
         - error
             - type
@@ -165,6 +171,36 @@ function testPsv(schema, data) {
     - getErrors   // 获取错误信息
 
 #### 注意：当 type = Object 时，说明该字段可以是任何 js 基本类型或对象，甚至可以是 一个 函数（慎用）。
+
+#### 4.1.0 之后，全面支持 default 默认值，default 可以是任何值，String 添加 trim 去空格支持。default 以及 trim 都支持无限嵌套
+
+```javascript 1.8
+const schema = {
+    key1: {
+        type: String,
+        default: '123',
+    }
+};
+const data = {};
+const psv = new Psv(schema, data);
+const res = psv.validate();
+// data.key1 === '123'
+```
+
+```javascript 1.8
+const schema = {
+    key1: {
+        type: String,
+        trim: true,
+    }
+};
+const data = {
+	key1: '  123'
+};
+const psv = new Psv(schema, data);
+const res = psv.validate();
+// data.key1 === '123'
+```
 
 同样，**psv** 支持嵌套定义
 
