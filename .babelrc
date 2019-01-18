@@ -1,5 +1,5 @@
 {
-  "presets" : ["es2017-node7", "stage-0"],
+  "presets": ["env"],
   "plugins": [
     "transform-decorators",
     "transform-async-to-generator",
