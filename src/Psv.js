@@ -38,7 +38,7 @@ export default class Psv {
 	printErrors() {
 		if (!this.errors || this.errors.length === 0) return;
 		for (const err of this.errors) {
-			console.error('\x1b[31m', err);
+			console.log('\x1b[31m', err);
 		}
 	}
 }
