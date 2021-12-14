@@ -1,3 +1,10 @@
+/*
+ * @Author: Porco
+ * @Date: 2021-12-13 22:07:04
+ * @LastEditTime: 2021-12-14 19:03:55
+ * @LastEditors: Porco
+ * @Description: 
+ */
 /**
  * Boolean 校验
  */
@@ -22,17 +29,6 @@ export default class PBoolean extends Base {
 		if (!this.isBoolean(schema, data, key)) return this.error;
 		
 		return this.error;
-	}
-	
-	
-	required(schema, data, key) {
-		if (schema[key].required) {
-			if (data[key] === undefined || data[key] === null) {
-				this.error.push(this.getError(schema, key, 'required'));
-				return false;
-			}
-		}
-		return true;
 	}
 	
 	isBoolean(schema, data, key) {

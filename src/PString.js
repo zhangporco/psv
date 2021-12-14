@@ -44,24 +44,6 @@ export default class PString extends Base {
 		return this.error;
 	}
 	
-	
-	/**
-	 * 必填 校验
-	 * @param schema
-	 * @param data
-	 * @param key
-	 * @returns {boolean}
-	 */
-	required(schema, data, key) {
-		if (schema[key].required) {
-			if (data[key] === undefined || data[key] === null) {
-				this.error.push(this.getError(schema, key, 'required'));
-				return false;
-			}
-		}
-		return true;
-	}
-	
 	/**
 	 * 是否为 String 校验
 	 * @param schema
